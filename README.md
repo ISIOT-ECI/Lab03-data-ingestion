@@ -10,16 +10,9 @@
 
 ### Lab Goal
 
-In this exercise,instead of sending sensor data back and forth between edge-devices (the ESP8266) (M2M- Machine-to-Machine communication) like in Lab-02, you will be sending it to a back-end platform which, in turn, will process it. To do so, you will configure the data ingestion layer of the IoT reference-architecture explored in the course using the Slack platform.
+The goal of this exercise is to send the sensor readings of the IoT devices to a back-end service for their processing, unlike Lab-02, which was focused on sending sensor data back and forth between edge-devices (the ESP8266), that is to say, following a M2M- Machine-to-Machine communication approach. To do so, you will configure the data ingestion layer of the IoT reference-architecture explored in the course using the Slack platform. Although, in principle, you could just create a MQTT-Client running on a server, as a data-ingestion layer, in this exercise we are asumming that your service will eventually receive data not from a couple of edge devices, but from thousands of them, and so scalability and high performance is a must. 
 
-Although, in principle, you could just create a MQTT-Client running on a server, as a data-ingestion layer, in this exercise we are asumming that your service will eventually receive data not from a couple of edge devices, but from thousands of them, and so scalability and high performance is a must. 
-
-Given that the protocol that work better on the IoT devices of previous exercises is MQTT, we will configure the data ingest layer so it will 'pull' the data posted by them into the MQTT Broker (CloudAMQP). This way, you won't have to do further changes -by now- on the devices firmware.
-
-In this first iteration of the proof of concept of the architecture, the ingested data will be running locally in your development environment using Docker and Docker compose. Furthermore, the collected data will be processed by a basic Slack consumer. In this, and the following laboratories, you will 
-
-
-
+Given that MQTT is the protocol that works better on the devices used on previous exercises, we will configure the data ingest layer so it will 'pull' the data from the MQTT broker (CloudAMQP) used before. In this first iteration on the proof of concept of the architecture, the data ingestion platform will be running locally in your development environment using Docker and Docker compose. Furthermore, the collected data will be processed by a basic Slack consumer. 
 
 ### Steps
 
