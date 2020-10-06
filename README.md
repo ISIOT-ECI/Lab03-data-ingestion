@@ -10,17 +10,17 @@
 
 ### Lab Goal
 
-The goal of this exercise is to send the sensor readings of the IoT devices to a back-end service for their processing, unlike Lab-02, which was focused on sending sensor data back and forth between edge-devices (the ESP8266), that is to say, following a M2M- Machine-to-Machine communication approach. To do so, you will configure the data ingestion layer of the IoT reference-architecture explored in the course using the Slack platform. Although, in principle, you could just create a MQTT-Client running on a server, as a data-ingestion layer, in this exercise we are asumming that your service will eventually receive data not from a couple of edge devices, but from thousands of them, and so scalability and high performance is a must. 
+The goal of this exercise is to send the sensor readings of the IoT devices to a back-end service for their processing, unlike Lab-02, which was focused on sending sensor data back and forth between edge-devices (the ESP8266), that is to say, following an M2M- Machine-to-Machine communication approach. To do so, you will configure the data ingestion layer of the IoT reference-architecture explored in the course using the Slack platform. Although, in principle, you could just create an MQTT-Client running on a server, as a data-ingestion layer, in this exercise we are assuming that your service will eventually receive data not from a couple of edge devices, but from thousands of them, and so scalability and high performance is a must. 
 
 Given that MQTT is the protocol that works better on the devices used on previous exercises, we will configure the data ingest layer so it will 'pull' the data from the MQTT broker (CloudAMQP) used before. In this first iteration on the proof of concept of the architecture, the data ingestion platform will be running locally in your development environment using Docker and Docker compose. Furthermore, the collected data will be processed by a basic Slack consumer. 
 
 ### Steps
 
-0. Update your ESP8266's code, so it post the readings of the sensors to the MQTT broker's topic with a given frequency, or (even better) every time you press the push button.
+0. Update your ESP8266's code, so it posts the readings of the sensors to the MQTT broker's topic with a given frequency, or (even better) every time you press the push button.
 
 1. Install [Docker](https://docs.docker.com/get-docker/) and [Docker compose](https://docs.docker.com/compose/install/) in your development environment.
 
-2. The file docker-compose.yml, and the 'custom-component' folder included in this repository contains the minimum configuratin to run the three containers required in this exercise, and to integrate them using [Docker-compose](https://docs.docker.com/compose/). The three containers are:
+2. The file docker-compose.yml, and the 'custom-component' folder included in this repository contains the minimum configuration to run the three containers required in this exercise, and to integrate them using [Docker-compose](https://docs.docker.com/compose/). The three containers are:
 	- Kafka: the streaming processing software platform (a.k.a. our data ingestion layer).
 	- Kafka connect: the platform that allows the integration with third-party brokers/data sources (e.g. ActiveMQ, JDBC, **MQTT**, etc).
 	- Zookeeper: a configuration service required by Kafka.
@@ -33,8 +33,8 @@ Given that MQTT is the protocol that works better on the devices used on previou
 
 3. Check that [all the three containers are 'up and running'](https://docs.docker.com/engine/reference/commandline/ps/). 
 
-4. Kafka-connect works in a service-oriented fashion. Hence, its configuration is [made through a REST API](https://docs.confluent.io/current/connect/references/restapi.html). Check in the Docker-compose file in which port this service is listening. As you can see in the section 'port' of the container configuration, this port is mapped to the same port in the host machine. Hence, you can use any REST client (curl, Postman, etc) and send requests from the host (i.e. *http://localhost:PORT*). Use the API to *GET* the connectors registered in the platform.
-If the [MqttSourceConnector](https://docs.confluent.io/current/connect/kafka-connect-mqtt/mqtt-source-connector/index.html) is still not registered, you should do it by sending a POST request with the folowing body (remember to include in the request header that the *Content-Type* of the request is 'application/json'. Remember to update the fields based on the configuration of the MQTT broker used on Lab-02. In "kafka.topic", choose a name only with letters, . (dot), and _ (underscore).
+4. Kafka-connect works in a service-oriented fashion. Hence, its configuration is [made through a REST API](https://docs.confluent.io/current/connect/references/restapi.html). Check in the Docker-compose file in which port this service is listening. As you can see in the section 'port' of the container configuration, this port is mapped to the same port in the host machine. Hence, you can use any REST client (curl, Postman, etc) and send requests from the host (i.e. *http://localhost:PORT*). Use the API to *GET* the connectors registered on the platform.
+If the [MqttSourceConnector](https://docs.confluent.io/current/connect/kafka-connect-mqtt/mqtt-source-connector/index.html) is still not registered, you should do it by sending a POST request with the following body (remember to include in the request header that the *Content-Type* of the request is 'application/json'. Remember to update the fields based on the configuration of the MQTT broker used on Lab-02. In "kafka.topic", choose a name only with letters, . (dot), and _ (underscore).
 
 	```json
 	{
@@ -54,7 +54,7 @@ If the [MqttSourceConnector](https://docs.confluent.io/current/connect/kafka-con
 	}
 	```
 
-7. Now you must crate a topic in the kafka server, that correspond to the one selected in the previous step, in the '"kafka.topic"' parameter. To do so, this command must be executed from the container running the Docker service (not from the host machine), replacing *ZOOKEEPER-HOST* with the address assigned by Docker's networking system to the container running Zookeeper:
+7. Now you must create a topic in the kafka server, that corresponds to the one selected in the previous step, in the '"kafka.topic"' parameter. To do so, this command must be executed from the container running the Docker service (not from the host machine), replacing *ZOOKEEPER-HOST* with the address assigned by Docker's networking system to the container running Zookeeper:
 
 	```
 	kafka-topics --create --zookeeper ZOOKEEPER-HOST:2181 --replication-factor 1 --partitions 1 --topic feeds.data
