@@ -14,6 +14,8 @@ The goal of this exercise is to send the sensor readings of the IoT devices to a
 
 Given that MQTT is the protocol that works better on the devices used on previous exercises, we will configure the data ingest layer so it will 'pull' the data from the MQTT broker (CloudAMQP) used before. In this first iteration on the proof of concept of the architecture, the data ingestion platform will be running locally in your development environment using Docker and Docker compose. Furthermore, the collected data will be processed by a basic Slack consumer. 
 
+Note: if you see any problem or inconsistency, please post an issue in this repository with the details.
+
 ### Steps
 
 0. Update your ESP8266's code, so it posts the readings of the sensors to the MQTT broker's topic with a given frequency, or (even better) every time you press the push button.
