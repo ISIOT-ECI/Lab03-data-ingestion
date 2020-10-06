@@ -21,7 +21,7 @@ In this first iteration of the proof of concept of the architecture, the ingeste
 
 
 
-### Requirements
+### Steps
 
 0. Update your ESP8266's code, so it post the readings of the sensors to the MQTT broker's topic with a given frequency, or (even better) every time you press the push button.
 
@@ -67,7 +67,7 @@ If the [MqttSourceConnector](https://docs.confluent.io/current/connect/kafka-con
 	kafka-topics --create --zookeeper ZOOKEEPER-HOST:2181 --replication-factor 1 --partitions 1 --topic feeds.data
 	```
 
-Check [how to list the running containers and their identifiers](https://docs.docker.com/engine/reference/commandline/ps/), and how to [run a command in a container](https://docs.docker.com/engine/reference/commandline/exec/). After doing so, to create the topic you can either (a) execute the command 'bash' with *docker exec* to open a shell in the container and run the command from there, or (b) execute the command directly with *docker exec*. Regarding Zookeeper's address, you can use the value given in the *hostname* attribute, in the docker-compose configuration file (only within the containers, these hostnames wouldn't be solved by the host).
+	Check [how to list the running containers and their identifiers](https://docs.docker.com/engine/reference/commandline/ps/), and how to [run a command in a container](https://docs.docker.com/engine/reference/commandline/exec/). After doing so, to create the topic you can either (a) execute the command 'bash' with *docker exec* to open a shell in the container and run the command from there, or (b) execute the command directly with *docker exec*. Regarding Zookeeper's address, you can use the value given in the *hostname* attribute, in the docker-compose configuration file (only within the containers, these hostnames wouldn't be solved by the host).
 
 
 8. To verify the configuration:
@@ -80,107 +80,14 @@ Check [how to list the running containers and their identifiers](https://docs.do
 
 9. Once you are sure that Docker was correctly configured, write your own Kafka client in Java. Use as a reference the [examples provided by *confluent*](https://docs.confluent.io/current/tutorials/examples/clients/docs/java.html#client-examples-java), in particular the [sample client](https://github.com/confluentinc/examples/blob/6.0.0-post/clients/cloud/java/src/main/java/io/confluent/examples/clients/cloud/ConsumerExample.java). Write a program that continuously calculates and prints the average value of the sensor readings received. Create a self-contained runnable jar for your application, so it can be easily executed from one of the containers.
 
-10. Test the application by running it in the Kafka's container shell. To let the container access your runnable jar, add an entry into the 'volumes' section of the 'kafka' service in the docker-compose.yml. 
 
+10. Test the application by running it in the Kafka's container shell. To let the container access your runnable jar, add an entry into the 'volumes' section of the 'kafka' service in the docker-compose.yml. For example, with the following configuration, if your executable jar is in the folder 'client', it will be available for the container in the folder /app. Remember to restart 
+
+	```yml
+	...
+	volumes:
+	      - ./kafka/data:/var/lib/kafka/data
+	      - ./client:/app
+	...
 	```
-	kafka-console-consumer --topic THE-KAFKA-TOPIC --from-beginning --bootstrap-server localhost:9092
-	```
 
-
-
-
-To do so, create a runnable jar and execute it from the Docker's container.
-
-10. 
-
-
-https://docs.docker.com/compose/
-
-
-
-the easiest way is to run it in the Kafka container (it has a jvm installed)
-
-
-Rather than getting the IP address required by the above command, take a look at the 'hostname' section in the Docker-compose configuration file. 
-
-
-To know the address of the 
-
-hostname: kafka
-
-
-
-You can either (a) execute
-
-You can execute commands on a container with the *docker execute* command](https://docs.docker.com/engine/reference/commandline/exec/), so 
-
-You can do it either by 
-8. running a linux shell on the container, and then executing the command, or e
-
-
-
-
-
-
-
-See the docker-connect configuration, each machine has a domain name 
-
-section hostname: kafka in the docker-compose , has the address of the other containers.
-
-The command to create a new topic. It should be executed 
-
-
-
-
-https://github.com/kaiwaehner/kafka-connect-iot-mqtt-connector-example/blob/master/live-demo-kafka-connect-iot-mqtt-connector.adoc
-
-
-### Esta guía no nos sirve (no usa docker), pero fue donde descubrí que faltaba el paso de hacer el tópico en kafka
-https://github.com/kaiwaehner/kafka-connect-iot-mqtt-connector-example/blob/master/live-demo-kafka-connect-iot-mqtt-connector.adoc
-
-
-### Se debe crear el topico en kafka despues de registrar el conector en kafka-connect. Esto se hace a traves de zookeeper.Como se hace desde la vm de kafka-connect, en vez de localhost se usa la direccion IP de la vm de zookeeper (en mi caso era 172.20.0.2)
-kafka-topics --create --zookeeper 172.20.0.2:2181 --replication-factor 1 --partitions 1 --topic feeds.data
-
-
-### Para obtener la dirección IP
-https://www.freecodecamp.org/news/how-to-get-a-docker-container-ip-address-explained-with-examples/
-
-ip -4 -o address
-
-docker exec -it 735962a36c39 ip -4 -o address
-
-### Prueba para ejecutarse dentro del contenedor de Kafka
-kafka-console-consumer --topic feeds.data --from-beginning --bootstrap-server localhost:9092
-
-
-
-docker exec -it f5147c9ff4e9 kafka-console-consumer --topic feeds.data --from-beginning --bootstrap-server localhost:9092
-
-
-Use the [sample client code](https://github.com/smallnest/kafka-example-in-scala/blob/master/src/main/java/com/colobu/kafka/ConsumerExample.java)
-
-
-mvn -f ./java-app/pom.xml  exec:java -Dexec.mainClass="edu.eci.isiot.kafka.simple.cli.SimpleKafkaClient"
-
-Containerize your app
-
-
-Minimal Consumer [app](https://kafka.apache.org/26/javadoc/index.html?org/apache/kafka/clients/consumer/KafkaConsumer.html)
-
-
-
-
-
-docker exec -it f5147c9ff4e9 kafka-console-producer --topic thetopic --bootstrap-server localhost:9092
-
-kafka-console-producer --topic example-topic --broker-list broker:9092
-
-
-[Code examples of Kafka client](https://docs.confluent.io/current/tutorials/examples/clients/docs/java.html#client-examples-java)
-
-
-
-
-
-Use the sample [consumer from confluent](https://docs.confluent.io/current/tutorials/examples/clients/docs/java.html#client-examples-java)
