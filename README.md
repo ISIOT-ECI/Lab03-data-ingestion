@@ -86,11 +86,4 @@ If the [MqttSourceConnector](https://docs.confluent.io/current/connect/kafka-con
 
 10. Test the application by running it in the Kafka's container shell, and -again- posting data into the MQTT broker. To let the container access your runnable jar, add an entry into the 'volumes' section of the 'kafka' service in the docker-compose.yml. For example, with the following configuration, if your executable jar is in the folder 'client', it will be available for the container in the folder /app. Remember to [stop and restart the containers so the changes are applied.](https://docs.docker.com/compose/reference/)
 
-	```yml
-	...
-	volumes:
-	      - ./kafka/data:/var/lib/kafka/data
-	      - ./client:/app
-	...
-	```
 
