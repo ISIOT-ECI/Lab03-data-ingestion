@@ -34,7 +34,7 @@ In this first iteration of the proof of concept of the architecture, the ingeste
 
 	Through the following exercises an laboratories, we will be exploring some details of Docker and Docker-compose. By now, let's fire the three containers by running:
 
-	```
+	```bash
 	docker-compose up
 	```
 
@@ -63,9 +63,9 @@ If the [MqttSourceConnector](https://docs.confluent.io/current/connect/kafka-con
 
 7. Now you must crate a topic in the kafka server, that correspond to the one selected in the previous step, in the '"kafka.topic"' parameter. To do so, this command must be executed from the container running the Docker service (not from the host machine), replacing *ZOOKEEPER-HOST* with the address assigned by Docker's networking system to the container running Zookeeper:
 
-```
-kafka-topics --create --zookeeper ZOOKEEPER-HOST:2181 --replication-factor 1 --partitions 1 --topic feeds.data
-```
+	```
+	kafka-topics --create --zookeeper ZOOKEEPER-HOST:2181 --replication-factor 1 --partitions 1 --topic feeds.data
+	```
 
 Check [how to list the running containers and their identifiers](https://docs.docker.com/engine/reference/commandline/ps/), and how to [run a command in a container](https://docs.docker.com/engine/reference/commandline/exec/). After doing so, to create the topic you can either (a) execute the command 'bash' with *docker exec* to open a shell in the container and run the command from there, or (b) execute the command directly with *docker exec*. Regarding Zookeeper's address, you can use the value given in the *hostname* attribute, in the docker-compose configuration file (only within the containers, these hostnames wouldn't be solved by the host).
 
