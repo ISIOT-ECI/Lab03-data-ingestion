@@ -20,12 +20,12 @@ Given that MQTT is the protocol that works better on the devices used on previou
 
 1. Install [Docker](https://docs.docker.com/get-docker/) and [Docker compose](https://docs.docker.com/compose/install/) in your development environment.
 
-2. The file docker-compose.yml included in this repository contains the minimum configuratin to run the three containers required in this exercise, and integrating them using [Docker-compose](https://docs.docker.com/compose/). The three containers are:
+2. The file docker-compose.yml, and the 'custom-component' folder included in this repository contains the minimum configuratin to run the three containers required in this exercise, and to integrate them using [Docker-compose](https://docs.docker.com/compose/). The three containers are:
 	- Kafka: the streaming processing software platform (a.k.a. our data ingestion layer).
 	- Kafka connect: the platform that allows the integration with third-party brokers/data sources (e.g. ActiveMQ, JDBC, **MQTT**, etc).
 	- Zookeeper: a configuration service required by Kafka.
 
-	Through the following exercises an laboratories, we will be exploring some details of Docker and Docker-compose. By now, let's fire the three containers by running:
+	If you are not familiar with Docker/Docker compose, in this, and the following exercise, we will be exploring -in practice- some of the basic concepts. By now, let's fire the three containers by running:
 
 	```bash
 	docker-compose up
