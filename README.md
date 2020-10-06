@@ -74,7 +74,17 @@ If the [MqttSourceConnector](https://docs.confluent.io/current/connect/kafka-con
 9. Once you are sure that Docker was correctly configured, write your own Kafka client in Java. Use as a reference the [examples provided by *confluent*](https://docs.confluent.io/current/tutorials/examples/clients/docs/java.html#client-examples-java), in particular the [sample client](https://github.com/confluentinc/examples/blob/6.0.0-post/clients/cloud/java/src/main/java/io/confluent/examples/clients/cloud/ConsumerExample.java). Write a program that continuously calculates and prints the average value of the sensor readings received. Create a self-contained runnable jar for your application, so it can be easily executed from one of the containers.
 
 
-10. Test the application by running it in the Kafka's container shell. To let the container access your runnable jar, add an entry into the 'volumes' section of the 'kafka' service in the docker-compose.yml. For example, with the following configuration, if your executable jar is in the folder 'client', it will be available for the container in the folder /app. Remember to restart 
+10. Test the application by running it in the Kafka's container shell. To let the container access your runnable jar, add an entry into the 'volumes' section of the 'kafka' service in the docker-compose.yml. For example, with the following configuration, if your executable jar is in the folder 'client', it will be available for the container in the folder /app. Remember to shutdown ab
+
+	```yml
+	...
+	volumes:
+	      - ./kafka/data:/var/lib/kafka/data
+	      - ./client:/app
+	...
+	```
+
+10. Test the application by running it in the Kafka's container shell, and -again- posting data into the MQTT broker. To let the container access your runnable jar, add an entry into the 'volumes' section of the 'kafka' service in the docker-compose.yml. For example, with the following configuration, if your executable jar is in the folder 'client', it will be available for the container in the folder /app. Remember to [stop and restart the containers so the changes are applied.](https://docs.docker.com/compose/reference/)
 
 	```yml
 	...
